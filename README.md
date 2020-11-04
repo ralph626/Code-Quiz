@@ -12,7 +12,7 @@ all questions have been answered the user will be
 prompted to enter their initials and be stored
 to view in another page and see all scores placed.
 
-Psuedo Code
+Pseudo Code
 
 html for content
 css for styling
