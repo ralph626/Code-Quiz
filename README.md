@@ -36,3 +36,5 @@ enter their initials to keep under 'view high scores'.
 in 'view high scores' after user inputs initials they will have options
 -go back button
 -clear high scores
+
+![image](https://user-images.githubusercontent.com/68761750/105670285-a5d0e180-5e95-11eb-8798-49ae1fd5d84d.png)
