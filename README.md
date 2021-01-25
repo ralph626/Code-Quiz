@@ -41,3 +41,8 @@ enter their initials to keep under 'view high scores'.
 in 'view high scores' after user inputs initials they will have options
 -go back button
 -clear high scores
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 8e651966fd642f667e41a457f1c11b3f1e5933c2
