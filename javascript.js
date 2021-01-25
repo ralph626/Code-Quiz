@@ -1,93 +1,143 @@
-var time = 135;
+var time = 90;
 var score = 0;
+let submitButton = document;
 var current = 0;
+var highscores = JSON.parse(localStorage.getItem("highscore")) || [];
 var questions = [
   {
-    message: "What is Tails' real name?",
-    answers: ["Tails", "Sonic 2", "Knuckles", "Mouse"],
-    correct: "Mouse",
+    message: "Commonly used data types DO NOT include: ",
+    answers: ["strings", "booleans", "alerts", "numbers"],
+    correct: "alerts",
   },
   {
-    message: "What is Sonics real name?",
-    answers: ["Tails", "Sonic the hedgehog", "Knuckles", "Mouse"],
-    correct: "Sonic the hedgehog",
+    message: "The condition in an if/else statement is enclosed within _____. ",
+    answers: ["quotes", "curly brackets", "parentheses", "square brackets"],
+    correct: "parentheses",
   },
   {
-    message: "What is Ralph's real name?",
-    answers: ["Tails", "Sonic 2", "Rafael", "Mouse"],
-    correct: "Rafael",
+    message: "Arrays in Javascript can be used to store _____. ",
+    answers: [
+      "numbers and strings",
+      "other arrays",
+      "booleans",
+      "all of the above",
+    ],
+    correct: "all of the above",
   },
   {
-    message: "What is Tails' real name?",
-    answers: ["Tails", "Sonic 2", "Knuckles", "Mouse"],
-    correct: "Mouse",
+    message:
+      "Strings values must be enclosed within _____ when being assigned to variables. ",
+    answers: ["commas", "curly brackets", "quotes", "parentheses"],
+    correct: "quotes",
   },
   {
-    message: "What is Tails' real name?",
-    answers: ["Tails", "Sonic 2", "Knuckles", "Mouse"],
-    correct: "Mouse",
+    message:
+      "A very useful tool used during development and debugging for printing content to the debugger is: ",
+    answers: ["JavaScript", "terminal/bash", "for loops", "console.log"],
+    correct: "console.log",
   },
 ];
 // <!--adding the timer start-->
-// <!--should have a on click  button to initiate the quiz-->
-
+// <!--the on click event to start the Quiz-->
+//jquery
+var timer;
 $("#start").on("click", function () {
-  var timer = setInterval(function () {
+  timer = setInterval(function () {
     var minute = Math.floor(time / 60);
     var second = ("0" + (time % 60)).slice(-2);
     $("#time").text(`${minute}:${second}`);
     time--;
     if (time < 0) {
       clearInterval(timer);
+      return endGame();
     }
   }, 1000);
   putQuestionOnPage();
 });
 
 function putQuestionOnPage() {
-  // <!--add quiz questions-->
+  // add quiz questions
+  // this adds 1 to the current and goes through the array and displays the message
+  if (current === questions.length) {
+    return endGame();
+  }
+  //displays the questions in green boxes
   $(".jumbotron").html(`
     <h3 class="mb-5">QUESTION ${current + 1} - ${
     questions[current].message
   }</h3>
-    ${questions[current].answers.map(
-      (ele) => `
-    <button class="btn btn-success btn-lg">
+    ${questions[current].answers
+      .map(
+        (ele) => `
+    <button class="btn btn-success answer btn-lg">
         ${ele}
     </button>
     `
-    ).join("")}
-    `);
+      )
+      .join("")}
+  `);
+}
+// need to add the clear button
+// <!--add clear high scores-->
+
+highscores.forEach((score) => $("#scoreboard").append(`<p>${score}</p>`));
+
+$("#hs").on("mouseenter", function () {
+  $("#scoreboard").show();
+});
+$("#hs").on("mouseleave", function () {
+  $("#scoreboard").hide();
+});
+
+function endGame() {
+  $(".jumbotron").html(`
+  <h2>Input your initials here</h2>
+  <input id = "initials">
+  <button class= "btn btn-lg btn-success" id="Submit">Submit</button> 
+  `);
+  clearInterval(timer);
+  $("#time").text("0:00");
+  $("#Submit").on("click", function () {
+    const initials = $("#initials").val();
+    highscores.push(initials + " - " + score);
+    localStorage.setItem("highscore", JSON.stringify(highscores));
+  });
 }
 
-$(".jumbotron").on("click", "button", function(){
-    // <!--logic for wrong and correct answers-->
-    var chosen = $(this).text().trim();
-   if(questions[current].correct === chosen){
-       correct()
-   }else{
-       wrong()
-   }
-   current++;
-   putQuestionOnPage();
-})
+$(".jumbotron").on("click", ".answer", function () {
+  // <!--logic for wrong and correct answers-->
+  var chosen = $(this).text().trim();
+  if (questions[current].correct === chosen) {
+    correct();
+  } else {
+    wrong();
+  }
+  current++;
+  putQuestionOnPage();
+});
 
 //if correct
-function correct(){
-    //correct logic here
-    alert("correct!")
+function correct() {
+  //correct logic here
+  $("#message").text("correct!");
+  score++;
+  //add a correct on the next page how they answered the question and fade after a few seconds
+  $("#message").animate({ opacity: 0 }, 1000, () => {
+    $("#message").text("").css("opacity", 1);
+  });
 }
 
 //if wrong
-function wrong(){
-    //wrong logic here
-    alert("wrong!")
+function wrong() {
+  //wrong logic here
+  time -= 30;
+  $("#message").text("Wrong");
+  //add a Wrong on the next page how they answered the question and fade after a few seconds
+  $("#message").animate({ opacity: 0 }, 1000, () => {
+    $("#message").text("").css("opacity", 1);
+  });
+
+  if (time <= 0) {
+    endGame();
+  }
 }
-// <!--logic for timer decreased-->
-
-// <!--enter initials page with accepting inputs-->
-// <!--add go back button-->
-// <!--add clear high scores-->
-
-// <!--add the view high scores page-->
-// <!--re reading the value of the input field-->
