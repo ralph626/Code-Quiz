@@ -1,8 +1,14 @@
+//the seconds on the timer
 var time = 90;
+//points for every correct answer
 var score = 0;
+//the submission button
 let submitButton = document;
+//the current question on the screen
 var current = 0;
+//the scores of anyone who submitted their initials
 var highscores = JSON.parse(localStorage.getItem("highscore")) || [];
+//the questions
 var questions = [
   {
     message: "Commonly used data types DO NOT include: ",
@@ -77,10 +83,9 @@ function putQuestionOnPage() {
       .join("")}
   `);
 }
-// need to add the clear button
-// <!--add clear high scores-->
 
-highscores.forEach((score) => $("#scoreboard").append(`<p>${score}</p>`));
+//the scores will appear: the last one submitted first
+highscores.forEach((score) => $("#scoreboard").prepend(`<p>${score}</p>`));
 
 $("#hs").on("mouseenter", function () {
   $("#scoreboard").show();
@@ -89,24 +94,28 @@ $("#hs").on("mouseleave", function () {
   $("#scoreboard").hide();
 });
 
+//at the end of the game the user will be prompted to enter initials
 function endGame() {
   $(".jumbotron").html(`
   <h2>Input your initials here</h2>
   <input id = "initials">
   <button class= "btn btn-lg btn-success" id="Submit">Submit</button> 
   `);
+  //clears the timer
   clearInterval(timer);
   $("#time").text("0:00");
+  //when submitted a score it will store it in local storage
   $("#Submit").on("click", function () {
     const initials = $("#initials").val();
     highscores.push(initials + " - " + score);
     localStorage.setItem("highscore", JSON.stringify(highscores));
   });
 }
-
+//the current question
 $(".jumbotron").on("click", ".answer", function () {
   // <!--logic for wrong and correct answers-->
   var chosen = $(this).text().trim();
+  //checking if the question was answered right or wrong
   if (questions[current].correct === chosen) {
     correct();
   } else {
@@ -121,7 +130,7 @@ function correct() {
   //correct logic here
   $("#message").text("correct!");
   score++;
-  //add a correct on the next page how they answered the question and fade after a few seconds
+  //added a correct on the next page how they answered the question and fade after a few seconds
   $("#message").animate({ opacity: 0 }, 1000, () => {
     $("#message").text("").css("opacity", 1);
   });
@@ -132,11 +141,11 @@ function wrong() {
   //wrong logic here
   time -= 30;
   $("#message").text("Wrong");
-  //add a Wrong on the next page how they answered the question and fade after a few seconds
+  //added a Wrong on the next page how they answered the question and fade after a few seconds
   $("#message").animate({ opacity: 0 }, 1000, () => {
     $("#message").text("").css("opacity", 1);
   });
-
+  //if the time fell less than 0 stop the game
   if (time <= 0) {
     endGame();
   }
